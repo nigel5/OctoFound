@@ -9,10 +9,8 @@ class MainView extends Component {
     return (
       <div className="MainVIew">
         MAINVIEW COMPONENT
-        <Switch>
             <Route exact path="/home" component={GridView}></Route>
-            <Route exact path="/detail" component={DetailedView}></Route>
-        </Switch>
+            <Route exact path="/details" component={DetailedView}></Route>
       </div>
     );
   }
