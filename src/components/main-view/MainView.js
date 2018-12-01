@@ -1,14 +1,24 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import DetailedView from '../detailed-view/DetailedView';
 import GridView from '../grid-view/GridView';
 import './MainView.css';
 
 class MainView extends Component {
+  constructor(props) {
+    super(props)
+
+    this.test = this.test.bind(this)
+  }
+  test() {
+    console.log("Button pressed")
+
+  }
   render() {
     return (
       <div className="MainVIew">
         MAINVIEW COMPONENT
+        <button onClick={this.test}>Test</button>
             <Route exact path="/home" component={GridView}></Route>
             <Route exact path="/details" component={DetailedView}></Route>
       </div>
