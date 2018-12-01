@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './ItemCard.css';
 
-class App extends Component {
+class ItemCard extends Component {
   render() {
     return (
       <div className="ItemCard">
@@ -11,4 +11,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default ItemCard;
