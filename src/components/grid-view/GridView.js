@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
+
 import './GridView.css';
 
 class GridView extends Component {
@@ -9,6 +11,10 @@ class GridView extends Component {
       </div>
     );
   }
+}
+
+GridView.propTypes = {
+
 }
 
 export default GridView;
