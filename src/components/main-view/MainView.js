@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 import DetailedView from '../detailed-view/DetailedView';
 import GridView from '../grid-view/GridView';
 import './MainView.css';
-
+import ItemCard from '../item-card/ItemCard.js';
 class MainView extends Component {
   constructor(props) {
     super(props)
@@ -16,12 +16,17 @@ class MainView extends Component {
   }
   render() {
     return (
-      <div className="MainVIew">
+      <div className="MainView">
         MAINVIEW COMPONENT
         <button onClick={this.test}>Test</button>
             <Route exact path="/home" component={GridView}></Route>
             <Route exact path="/details" component={DetailedView}></Route>
+            <ItemCard/>
+            <ItemCard/>
+            <ItemCard/>
+            <ItemCard/>
       </div>
+      
     );
   }
 }

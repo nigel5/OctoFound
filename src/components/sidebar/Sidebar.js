@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import './Sidebar.css';
 import SearchForm from '../search-form/SearchForm.js';
+import { Button, Collapse } from 'reactstrap';
 class Sidebar extends Component {
   render() {
     return (
     		<div class="wrapper">
+            
     	    <nav id="sidebar">
-    	    
+            <div id="dismiss">
+            <i class="fas fa-arrow-left"></i>
+            
+
+        </div>
     	        <div class="sidebar-header">
     	            <h3>Lost and Found</h3>
     	            <SearchForm />
@@ -22,21 +28,12 @@ class Sidebar extends Component {
     	          </ul>
 
     	    </nav>
-
-    	    <div id="content">
-
-    	        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    	            <div class="container-fluid">
-
-    	                <button type="button" id="sidebarCollapse" class="btn btn-info">
-    	                    <i class="fas fa-align-left"></i>
-    	                    <span>Toggle Sidebar</span>
-    	                </button>
-    	            </div>
-    	        </nav>
-    	    </div>
     	</div>
+
     );
+  }
+  toggle(){
+	  this.state.open = !this.state.open
   }
 }
 
