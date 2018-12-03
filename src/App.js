@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Container, Row, Col } from 'reactstrap';
 import MainView from './components/main-view/MainView'
 import Topnav from './components/topnav/Topnav'
 import './App.css';
@@ -8,7 +9,9 @@ class App extends Component {
     return (
       <div className="App">
         <Topnav />
-        <MainView />
+        <Container>
+          <MainView />
+        </Container>
       </div>
     );
   }
