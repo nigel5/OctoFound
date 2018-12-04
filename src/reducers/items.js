@@ -6,17 +6,17 @@ import {
 const items = (state = [], action) => {
   switch (action.type) {
     case FETCH_ALL_ITEMS_BEGIN:
-      return state
+      return state;
     case FETCH_ALL_ITEMS_SUCCESS:
       return {
         ...state,
          items: action.data
-       }
+       };
     case FETCH_ALL_ITEMS_FAILURE:
-      return state
+      return state;
     default:
       return state
   }
-}
+};
 
 export default items

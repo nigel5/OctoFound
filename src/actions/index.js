@@ -1,24 +1,24 @@
-const env = require("../env.json")
+const env = require("../env.json");
 
-export const FETCH_ALL_ITEMS_BEGIN = 'FETCH_ALL_ITEMS_BEGIN'
-export const FETCH_ALL_ITEMS_SUCCESS = 'FETCH_ALL_ITEMS_SUCCESS'
-export const FETCH_ALL_ITEMS_FAILURE = 'FETCH_ALL_ITEMS_FAILURE'
+export const FETCH_ALL_ITEMS_BEGIN = 'FETCH_ALL_ITEMS_BEGIN';
+export const FETCH_ALL_ITEMS_SUCCESS = 'FETCH_ALL_ITEMS_SUCCESS';
+export const FETCH_ALL_ITEMS_FAILURE = 'FETCH_ALL_ITEMS_FAILURE';
 
-export const FETCH_ITEM_BY_ID_BEGIN = 'FETCH_ITEM_BY_ID_BEGIN'
-export const FETCH_ITEM_BY_ID_SUCCESS = 'FETCH_ITEM_BY_ID_SUCCESS'
-export const FETCH_ITEM_BY_ID_FAILURE = 'FETCH_ITEM_BY_ID_FAILURE'
+export const FETCH_ITEM_BY_ID_BEGIN = 'FETCH_ITEM_BY_ID_BEGIN';
+export const FETCH_ITEM_BY_ID_SUCCESS = 'FETCH_ITEM_BY_ID_SUCCESS';
+export const FETCH_ITEM_BY_ID_FAILURE = 'FETCH_ITEM_BY_ID_FAILURE';
 
-export const DELETE_ITEM_BEGIN = 'DELETE_ITEM_BEGIN'
-export const DELETE_ITEM_SUCCESS = 'DELETE_ITEM_SUCCESS'
-export const DELETE_ITEM_FAILURE = 'DELETE_ITEM_FAILURE'
+export const DELETE_ITEM_BEGIN = 'DELETE_ITEM_BEGIN';
+export const DELETE_ITEM_SUCCESS = 'DELETE_ITEM_SUCCESS';
+export const DELETE_ITEM_FAILURE = 'DELETE_ITEM_FAILURE';
 
-export const UPDATE_ITEM_BEGIN = 'UPDATE_ITEM_BEGIN'
-export const UPDATE_ITEM_SUCCESS = 'UPDATE_ITEM_SUCCESS'
-export const UPDATE_ITEM_FAILURE = 'UPDATE_ITEM_FAILURE'
+export const UPDATE_ITEM_BEGIN = 'UPDATE_ITEM_BEGIN';
+export const UPDATE_ITEM_SUCCESS = 'UPDATE_ITEM_SUCCESS';
+export const UPDATE_ITEM_FAILURE = 'UPDATE_ITEM_FAILURE';
 
-export const ADD_ITEM_BEGIN = 'ADD_ITEM_BEGIN'
-export const ADD_ITEM_SUCCESS = 'ADD_ITEM_SUCCESS'
-export const ADD_ITEM_FAILURE = 'ADD_ITEM_FAILURE'
+export const ADD_ITEM_BEGIN = 'ADD_ITEM_BEGIN';
+export const ADD_ITEM_SUCCESS = 'ADD_ITEM_SUCCESS';
+export const ADD_ITEM_FAILURE = 'ADD_ITEM_FAILURE';
 
 
 function fetchAllItemsBegin() {
@@ -45,16 +45,16 @@ function fetchAllItemsFailure(error) {
 
 // Functions ...
 export function fetchAllItems() {
-  console.log(env)
+  console.log(env);
     return function (dispatch) {
-        dispatch(fetchAllItemsBegin())
+        dispatch(fetchAllItemsBegin());
         return fetch(env.API.URL, {
                 method: 'GET'
             })
             .then(
                 response => response.json(),
                 error => {
-                  console.log('An error occurred.', error)
+                  console.log('An error occurred.', error);
                   return dispatch(fetchAllItemsFailure(error))
                 }
             )

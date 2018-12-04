@@ -5,7 +5,7 @@ import ItemCard from '../item-card/ItemCard.js';
 
 class MainView extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       itemCards: []
     }
@@ -13,10 +13,11 @@ class MainView extends Component {
 
   componentDidMount() {
     this.props.fetchAll().then(() => {
-      for (var x = 0; x < this.props.items.items.length; x++) {
+      for (let x = 0; x < this.props.items.items.length; x++) {
         this.setState({
           itemCards: this.state.itemCards.concat([
-            <ItemCard key={this.props.items.items[x]._id} name={this.props.items.items[x].name} imageURL={this.props.items.items[x].imageURL} />
+            <ItemCard key={this.props.items.items[x]._id} name={this.props.items.items[x].name} imageURL={this.props.items.items[x].imageURL}
+            comments={this.props.items.items[x].comments} />
           ])
         })
       }
@@ -24,7 +25,7 @@ class MainView extends Component {
   }
 
   render() {
-    if (!this.state.itemCards.length) return null
+    if (!this.state.itemCards.length) return null;
 
     return (
       <div className="MainView">
@@ -36,10 +37,10 @@ class MainView extends Component {
 
 const mapStateToProps = state => ({
   items: state.items
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   fetchAll: () => dispatch(fetchAllItems())
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainView);

@@ -13,9 +13,9 @@ class ItemCard extends Component {
     	          <CardTitle>{this.props.name}</CardTitle>
     	          <CardSubtitle>{this.props.comments}</CardSubtitle>
     	        </CardBody>
-    	        <img width="100%" src={this.props.imageURL} alt="Item image" />
+    	        <img width="100%" src={this.props.imageURL} />
     	        <CardBody>
-    	          <CardText></CardText>
+    	          <CardText>Card Test</CardText>
     	          <Button color="primary">More Info</Button>
     	        </CardBody>
     	      </Card>
