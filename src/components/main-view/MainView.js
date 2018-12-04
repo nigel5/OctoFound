@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getAllItems } from '../../actions/index'
 import { fetchAllItems } from '../../actions/index'
-import { Route, Switch } from 'react-router-dom';
 import ItemCard from '../item-card/ItemCard.js';
 
 class MainView extends Component {
@@ -15,7 +13,6 @@ class MainView extends Component {
 
   componentDidMount() {
     this.props.fetchAll().then(() => {
-      let items = []
       for (var x = 0; x < this.props.items.items.length; x++) {
         this.setState({
           itemCards: this.state.itemCards.concat([

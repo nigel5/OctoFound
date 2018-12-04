@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container } from 'reactstrap';
 import MainView from './components/main-view/MainView'
 import Topnav from './components/topnav/Topnav'
 import './App.css';
