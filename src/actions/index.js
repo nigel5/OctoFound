@@ -45,22 +45,24 @@ function fetchAllItemsFailure(error) {
 
 // Functions ...
 export function fetchAllItems() {
-  console.log(env);
     return function (dispatch) {
         dispatch(fetchAllItemsBegin());
-        return fetch(env.API.URL, {
+        return fetch(env.api.url, {
                 method: 'GET'
             })
             .then(
                 response => response.json(),
                 error => {
                   console.log('An error occurred.', error);
-                  return dispatch(fetchAllItemsFailure(error))
+                  return dispatch(fetchAllItemsFailure(error));
                 }
             )
             .then(data => {
                 return dispatch(fetchAllItemsSuccess(data))
-                }
-            )
+            })
+            .catch((err) => {
+                return dispatch(fetchAllItemsFailure());
+            });
+
     }
 }
