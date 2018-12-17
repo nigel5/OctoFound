@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {addItem} from '../../actions/index';
 import AddItem from '../add-item/AddItem';
 import {
     Navbar,
@@ -23,9 +25,16 @@ class Topnav extends Component {
             isOpen: false,
             isOpenModal: false
         };
+
+        this.addItemRef = React.createRef();
+
+        this.submit = this.submit.bind(this);
     }
 
-    toggleModal() {
+    toggleModal(event) {
+        if (event.target.name === "submit") {
+          this.submit();
+        }
         this.setState({
             isOpen: this.state.isOpen,
             isOpenModal: !this.state.isOpenModal
@@ -37,6 +46,17 @@ class Topnav extends Component {
             isOpen: !this.state.isOpen,
             isOpenModal: this.state.isOpenModal
         });
+    }
+
+    submit() {
+      let formData = this.addItemRef.current.getFormData();
+      if (!formData.name || !formData.status || !formData.comment) return;
+      this.props.addNewItem(
+        formData.name,
+        formData.status,
+        formData.comment,
+        formData.imageURL
+      )
     }
 
     render() {
@@ -60,14 +80,19 @@ class Topnav extends Component {
                         </Nav>
                     </Collapse>
                 </Navbar>
-                <Modal isOpen={this.state.isOpenModal} toggle={this.toggleModal} className="TopnavModal">
+                <Modal isOpen={this.state.isOpenModal} toggle={this.toggleModal} className="TopnavModal" fade={false}>
                     <ModalHeader toggle={this.toggleModal}>Add new lost item</ModalHeader>
                     <ModalBody>
-                        <AddItem/>
+                        <AddItem ref={this.addItemRef}/>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.toggleModal}>Submit</Button>{' '}
-                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                        <Button color="primary"
+                                name="submit"
+                                onClick={this.toggleModal}
+                                disabled={false}>
+                                  Submit
+                        </Button>{' '}
+                        <Button color="secondary" name="cancel" onClick={this.toggleModal}>Cancel</Button>
                     </ModalFooter>
                 </Modal>
             </div>
@@ -75,4 +100,12 @@ class Topnav extends Component {
     }
 }
 
-export default Topnav
+const mapStateToProps = state => ({
+    items: state.items
+});
+
+const mapDispatchToProps = dispatch => ({
+    addNewItem: (name, status, comment, imageURL) => dispatch(addItem(name, status, comment, imageURL))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Topnav);
