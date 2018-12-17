@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {fetchAllItems} from '../../actions/index'
+import {fetchAllItems} from '../../actions/index';
 import ItemCard from '../item-card/ItemCard.js';
+import {Row, Col, Container} from 'reactstrap';
 
 class MainView extends Component {
     constructor(props) {
@@ -60,7 +61,11 @@ class MainView extends Component {
         else {
             return (
                 <div className="MainView">
-                    {this.state.itemCards}
+                  <Container>
+                    <Row>
+                      {this.state.itemCards}
+                    </Row>
+                  </Container>
                 </div>
             );
         }
