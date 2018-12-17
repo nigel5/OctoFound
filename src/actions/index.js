@@ -47,6 +47,14 @@ function fetchAllItemsFailure(error) {
 export function fetchAllItems() {
     return function (dispatch) {
         dispatch(fetchAllItemsBegin());
+        
+        // Fake server for dev
+        if (process.env.NODE_ENV === "development") {
+          return new Promise((res, rej) => {
+            res(dispatch(fetchAllItemsSuccess(_fetchAllItemsDev())))
+          });
+        }
+
         return fetch(env.api.url, {
                 method: 'GET'
             })
@@ -65,4 +73,39 @@ export function fetchAllItems() {
             });
 
     }
+}
+
+function _fetchAllItemsDev() {
+  return {
+    0: {
+      name: "Pencil",
+      status: "lost",
+      comment: "Found under table",
+      imageURL: "http://placekitten.com/200/200?image=1"
+    },
+    1: {
+      name: "Eraser",
+      status: "found",
+      comment: "Found on the ground, surrounded by eraser shavings :(",
+      imageURL: "http://placekitten.com/200/200?image=2"
+    },
+    2: {
+      name: "iPhone XS",
+      status: "aunctioned",
+      comment: "Found on the bus. No claim in four months.",
+      imageURL: "http://placekitten.com/200/200?image=3"
+    },
+    3: {
+      name: "Bio exam notes",
+      status: "lost",
+      comment: "Found near the library entrance two days before biology exam",
+      imageURL: "http://placekitten.com/200/200?image=4"
+    },
+    4: {
+      name: "Physics exam notes",
+      status: "lost",
+      comment: "Found near the library entrance two days before physics exam",
+      imageURL: "http://placekitten.com/200/200?image=5"
+    }
+  }
 }
