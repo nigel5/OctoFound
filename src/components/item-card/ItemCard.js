@@ -29,7 +29,7 @@ class ItemCard extends Component {
 				this.statusTextColor = "#000000";
 		}
 	}
-
+	
   render() {
     return (
     	    <div className="ItemCard">

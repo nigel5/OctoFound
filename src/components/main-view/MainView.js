@@ -19,17 +19,19 @@ class MainView extends Component {
 
         this.props.fetchAll()
             .then(() => {
-                for (let x = 0; x < this.props.items.length; x++) {
-                    this.setState({
-                        itemCards: this.state.itemCards.concat([
-                            <ItemCard key={this.props.items.items[x]._id} name={this.props.items.items[x].name}
-                                      imageURL={this.props.items.items[x].imageURL}
-                                      comments={this.props.items.items[x].comments}/>
-                        ])
-                    });
-                }
+                let res = Object.keys(this.props.items).map((i) => {
+                  return <ItemCard
+                                key={i}
+                                id={this.props.items[i]._id}
+                                name={this.props.items[i].name}
+                                status={this.props.items[i].status}
+                                imageURL={this.props.items[i].imageURL}
+                                comments={this.props.items[i].comments}/>
+                });
+
                 this.setState({
-                    loading: false
+                    loading: false,
+                    itemCards: res
                 });
             })
             .catch((err) => {
