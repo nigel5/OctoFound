@@ -1,3 +1,9 @@
+import FakeServer from "../util/fakeServer";
+let fakeServer;
+if (process.env.NODE_ENV === "development") {
+  fakeServer = new FakeServer();
+}
+
 const env = require("../env.json");
 
 export const FETCH_ALL_ITEMS_BEGIN = 'FETCH_ALL_ITEMS_BEGIN';
@@ -43,6 +49,28 @@ function fetchAllItemsFailure(error) {
     }
 }
 
+function addItemBegin() {
+    return {
+        type: ADD_ITEM_BEGIN
+    }
+}
+
+function addItemSuccess(data) {
+    return {
+        type: ADD_ITEM_SUCCESS,
+        data: data,
+        receivedAt: Date.now()
+    }
+}
+
+function addItemFailure(error) {
+    return {
+        type: ADD_ITEM_FAILURE,
+        error: error,
+        receivedAt: Date.now()
+    }
+}
+
 // Functions ...
 export function fetchAllItems() {
     return function (dispatch) {
@@ -50,8 +78,8 @@ export function fetchAllItems() {
 
         // Fake server for dev
         if (process.env.NODE_ENV === "development") {
-          return new Promise((res, rej) => {
-            res(dispatch(fetchAllItemsSuccess(_fetchAllItemsDev())))
+          return new Promise((res) => {
+            res(dispatch(fetchAllItemsSuccess(fakeServer.fetchAllItems())));
           });
         }
 
@@ -60,57 +88,63 @@ export function fetchAllItems() {
             })
             .then(
                 response => response.json(),
-                error => {
-                  console.log('An error occurred.', error);
-                  return dispatch(fetchAllItemsFailure(error));
+                err => {
+                  console.log('An error occurred.', err);
+                  return dispatch(fetchAllItemsFailure(err));
                 }
             )
             .then(data => {
                 return dispatch(fetchAllItemsSuccess(data))
             })
             .catch((err) => {
-                return dispatch(fetchAllItemsFailure());
+                return dispatch(fetchAllItemsFailure(err));
             });
 
     }
 }
 
-function _fetchAllItemsDev() {
-  return {
-    0: {
-      name: "Pencil",
-      status: "lost",
-      comment: "Found under table",
-      imageURL: "http://placekitten.com/200/200?image=1",
-      _id: "e73ffd87-fb27-45a0-800c-65a23833e3dd"
-    },
-    1: {
-      name: "Eraser",
-      status: "found",
-      comment: "Found on the ground, surrounded by eraser shavings :(",
-      imageURL: "http://placekitten.com/200/200?image=2",
-      _id: "e73ffd87-fb27-45a0-800c-65a23833e3dd"
-    },
-    2: {
-      name: "iPhone XS",
-      status: "aunctioned",
-      comment: "Found on the bus. No claim in four months.",
-      imageURL: "http://placekitten.com/200/200?image=3",
-      _id: "e73ffd87-fb27-45a0-800c-65a23833e3dd"
-    },
-    3: {
-      name: "Bio exam notes",
-      status: "lost",
-      comment: "Found near the library entrance two days before biology exam",
-      imageURL: "http://placekitten.com/200/200?image=4",
-      _id: "e73ffd87-fb27-45a0-800c-65a23833e3dd"
-    },
-    4: {
-      name: "Physics exam notes",
-      status: "lost",
-      comment: "Found near the library entrance two days before physics exam",
-      imageURL: "http://placekitten.com/200/200?image=5",
-      _id: "ce07b173-5097-4dd9-a175-34c6bbe839d1"
+export function addItem(name, status, comment, imageURL) {
+  return function (dispatch) {
+    dispatch(addItemBegin());
+
+    // Fake server for dev
+    if (process.env.NODE_ENV === "development") {
+      return new Promise((res) => {
+        res(dispatch(addItemSuccess(fakeServer.addItem(buildItem(
+          name, status, comment, null
+        )))));
+      });
     }
-  }
+
+    return fetch(env.api.url + "/new", {
+              method: 'POST',
+              body: JSON.stringify(buildItem(
+                name, status, comment, null
+              ))
+          })
+          .then(
+              response => response.json(),
+              err => {
+                console.log('An error occurred.', err);
+                return dispatch(addItemFailure(err));
+              }
+          )
+          .then(data => {
+              return dispatch(addItemSuccess(data))
+          })
+          .catch((err) => {
+              return dispatch(addItemFailure(err));
+          });
+    }
+}
+
+function buildItem(name, status, comment ,imageURL) {
+  return {
+          name: name,
+          status: status,
+          comment: comment,
+          imageURL: imageURL ? imageURL : "http://placekitten.com/200/200?image=5",
+          dateAdded: new Date(),
+          _id: `yourNewItemId${Math.random()}`
+  };
 }

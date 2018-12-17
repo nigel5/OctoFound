@@ -2,15 +2,24 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {fetchAllItems} from '../../actions/index';
 import ItemCard from '../item-card/ItemCard.js';
-import {Row, Col, Container} from 'reactstrap';
+import {Row, Container} from 'reactstrap';
 
 class MainView extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             itemCards: [],
             loading: false
-        }
+        };
+
+        this.createGrid = this.createGrid.bind(this);
+    }
+
+    componentDidUpdate(prevProps) {
+      if (Object.keys(prevProps.items).length !== Object.keys(this.props.items).length) {
+        this.setState({ itemCards: this.createGrid() });
+      }
     }
 
     componentDidMount() {
@@ -20,19 +29,9 @@ class MainView extends Component {
 
         this.props.fetchAll()
             .then(() => {
-                let res = Object.keys(this.props.items).map((i) => {
-                  return <ItemCard
-                                key={i}
-                                id={this.props.items[i]._id}
-                                name={this.props.items[i].name}
-                                status={this.props.items[i].status}
-                                imageURL={this.props.items[i].imageURL}
-                                comments={this.props.items[i].comments}/>
-                });
-
                 this.setState({
                     loading: false,
-                    itemCards: res
+                    itemCards: this.createGrid()
                 });
             })
             .catch((err) => {
@@ -41,6 +40,20 @@ class MainView extends Component {
                     loading: false
                 });
             })
+    }
+
+    createGrid() {
+      let res = Object.keys(this.props.items).map((i) => {
+        return <ItemCard
+                      key={i}
+                      id={this.props.items[i]._id}
+                      name={this.props.items[i].name}
+                      status={this.props.items[i].status}
+                      imageURL={this.props.items[i].imageURL}
+                      comments={this.props.items[i].comments}/>
+      });
+
+      return res;
     }
 
     render() {
