@@ -71,13 +71,35 @@ function addItemFailure(error) {
     }
 }
 
+function updateItemBegin() {
+    return {
+        type: UPDATE_ITEM_BEGIN
+    }
+}
+
+function updateItemSuccess(data) {
+    return {
+        type: UPDATE_ITEM_SUCCESS,
+        data: data,
+        receivedAt: Date.now()
+    }
+}
+
+function updateItemFailure(error) {
+    return {
+        type: UPDATE_ITEM_FAILURE,
+        error: error,
+        receivedAt: Date.now()
+    }
+}
+
 // Functions ...
 export function fetchAllItems() {
     return function (dispatch) {
         dispatch(fetchAllItemsBegin());
 
         // Fake server for dev
-        if (process.env.NODE_ENV === "development") {
+        if (env.env === "development") {
           return new Promise((res) => {
             res(dispatch(fetchAllItemsSuccess(fakeServer.fetchAllItems())));
           });
@@ -106,9 +128,8 @@ export function fetchAllItems() {
 export function addItem(name, status, comment, imageURL) {
   return function (dispatch) {
     dispatch(addItemBegin());
-
     // Fake server for dev
-    if (process.env.NODE_ENV === "development") {
+    if (env.env === "development") {
       return new Promise((res) => {
         res(dispatch(addItemSuccess(fakeServer.addItem(buildItem(
           name, status, comment, null
@@ -117,9 +138,12 @@ export function addItem(name, status, comment, imageURL) {
     }
 
     return fetch(env.api.url + "/new", {
-              method: 'POST',
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
               body: JSON.stringify(buildItem(
-                name, status, comment, null
+                name, status, comment, null, null
               ))
           })
           .then(
@@ -130,7 +154,7 @@ export function addItem(name, status, comment, imageURL) {
               }
           )
           .then(data => {
-              return dispatch(addItemSuccess(data))
+              return dispatch(addItemSuccess(data));
           })
           .catch((err) => {
               return dispatch(addItemFailure(err));
@@ -138,13 +162,28 @@ export function addItem(name, status, comment, imageURL) {
     }
 }
 
-function buildItem(name, status, comment ,imageURL) {
+export function updateItem(name, status, comment, imageURL, id) {
+  return function(dispatch) {
+    dispatch(updateItemBegin());
+
+    if (env.env === "development") {
+      return new Promise((res) => {
+        res(dispatch(updateItemSuccess(fakeServer.updateItem(buildItem(
+          name, status, comment, null, id
+        )))));
+      });
+    }
+
+  }
+}
+
+function buildItem(name, status, comment ,imageURL, id) {
   return {
           name: name,
           status: status,
           comment: comment,
           imageURL: imageURL ? imageURL : "http://placekitten.com/200/200?image=5",
           dateAdded: new Date(),
-          _id: `yourNewItemId${Math.random()}`
+          _id: id ? id : `yourNewItemId${Math.random()}`
   };
 }
