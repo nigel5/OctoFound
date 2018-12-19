@@ -17,7 +17,10 @@ class MainView extends Component {
     }
 
     componentDidUpdate(prevProps) {
-      if (Object.keys(prevProps.items).length !== Object.keys(this.props.items).length) {
+      // if (Object.keys(prevProps.items).length !== Object.keys(this.props.items).length) {
+      //   this.setState({ itemCards: this.createGrid() });
+      // }
+      if (prevProps.items !== this.props.items) {
         this.setState({ itemCards: this.createGrid() });
       }
     }
@@ -50,7 +53,7 @@ class MainView extends Component {
                       name={this.props.items[i].name}
                       status={this.props.items[i].status}
                       imageURL={this.props.items[i].imageURL}
-                      comments={this.props.items[i].comments}/>
+                      comment={this.props.items[i].comment}/>
       });
 
       return res;
