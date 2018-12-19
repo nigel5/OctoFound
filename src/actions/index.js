@@ -93,6 +93,28 @@ function updateItemFailure(error) {
     }
 }
 
+function deleteItemBegin() {
+    return {
+        type: DELETE_ITEM_BEGIN
+    }
+}
+
+function deleteItemSuccess(data) {
+    return {
+        type: DELETE_ITEM_SUCCESS,
+        data: data,
+        receivedAt: Date.now()
+    }
+}
+
+function deleteItemFailure(error) {
+    return {
+        type: DELETE_ITEM_FAILURE,
+        error: error,
+        receivedAt: Date.now()
+    }
+}
+
 // Functions ...
 export function fetchAllItems() {
     return function (dispatch) {
@@ -131,9 +153,15 @@ export function addItem(name, status, comment, imageURL) {
     // Fake server for dev
     if (env.env === "development") {
       return new Promise((res) => {
-        res(dispatch(addItemSuccess(fakeServer.addItem(buildItem(
-          name, status, comment, null
-        )))));
+        res(dispatch(addItemSuccess(fakeServer.addItem(
+          {
+            name: name,
+            status: status,
+            comment: comment,
+            image: imageURL ? imageURL : "http://placekitten.com/200/200?image=5",
+            dateAdded: new Date(),
+          }
+        ))));
       });
     }
 
@@ -142,9 +170,15 @@ export function addItem(name, status, comment, imageURL) {
               headers: {
                 "Content-Type": "application/json"
               },
-              body: JSON.stringify(buildItem(
-                name, status, comment, null, null
-              ))
+              body: JSON.stringify(
+                {
+                  name: name,
+                  status: status,
+                  comment: comment,
+                  image: imageURL ? imageURL : "http://placekitten.com/200/200?image=5",
+                  dateAdded: new Date(),
+                }
+              )
           })
           .then(
               response => response.json(),
@@ -162,28 +196,76 @@ export function addItem(name, status, comment, imageURL) {
     }
 }
 
-export function updateItem(name, status, comment, imageURL, id) {
+export function updateItemById(name, status, comment, imageURL, id) {
   return function(dispatch) {
     dispatch(updateItemBegin());
 
     if (env.env === "development") {
       return new Promise((res) => {
-        res(dispatch(updateItemSuccess(fakeServer.updateItem(buildItem(
-          name, status, comment, null, id
-        )))));
+        res(dispatch(updateItemSuccess(fakeServer.updateItem(
+          {
+            name: name,
+            status: status,
+            comment: comment,
+            imageURL: imageURL
+          }
+        ))));
       });
     }
 
+    return fetch(env.api.url + `/${id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(
+                {
+                  name: name,
+                  status: status,
+                  comment: comment,
+                  image: imageURL,
+                }
+              )
+          })
+          .then(
+              response => response.json(),
+              err => {
+                console.log('An error occurred.', err);
+                return dispatch(updateItemFailure(err));
+              }
+          )
+          .then(data => {
+              return dispatch(updateItemSuccess(data));
+          })
+          .catch((err) => {
+              return dispatch(updateItemFailure(err));
+          });
   }
 }
 
-function buildItem(name, status, comment ,imageURL, id) {
-  return {
-          name: name,
-          status: status,
-          comment: comment,
-          imageURL: imageURL ? imageURL : "http://placekitten.com/200/200?image=5",
-          dateAdded: new Date(),
-          _id: id ? id : `yourNewItemId${Math.random()}`
-  };
+export function deleteItemById(id) {
+  return function(dispatch) {
+    dispatch(deleteItemBegin());
+
+    if (!id) {
+      return dispatch(deleteItemFailure());
+    }
+
+    return fetch(env.api.url + `/${id}`, {
+              method: "DELETE"
+          })
+          .then(
+              response => response.json(),
+              err => {
+                console.log('An error occurred.', err);
+                return dispatch(deleteItemFailure(err));
+              }
+          )
+          .then(data => {
+              return dispatch(deleteItemSuccess(data));
+          })
+          .catch((err) => {
+              return dispatch(deleteItemFailure(err));
+          });
+  }
 }

@@ -58,4 +58,8 @@ export default class FakeServer {
 
     return data;
   }
+
+  updateItem(data) {
+
+  }
 }
